@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Indian Cities</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Madimi+One&display=swap");
+      h1 {
+        text-align: center;
+        font-family: "Madimi One", sans-serif;
+        font-weight: 400;
+        font-size: 50px;
+        background-color: antiquewhite;
+      }
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f2f2f2;
+        margin: 0;
+        padding: 20px;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+      }
+      th,
+      td {
+        border: 1px solid #afa9a9;
+        padding: 8px;
+        text-align: left;
+      }
+      th {
+        background-color: #f2f2f2;
+      }
+      img {
+        max-width: 100px;
+        max-height: 100px;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Cities of India</h1>
+    <table id="cities-table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Information</th>
+          <th>Image</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+
+    <script>
+      const tbody = document.querySelector("#cities-table tbody");
+
+      // Fetch JSON data
+      fetch("https://api.npoint.io/7bbd3a59c401f616bb89")
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("Network response was not ok");
+          }
+          return response.json();
+        })
+        .then((data) => {
+          // Populate table with city details
+          data.places.forEach((city) => {
+            const row = document.createElement("tr");
+
+            const nameCell = document.createElement("td");
+            nameCell.textContent = city.name;
+
+            const information = document.createElement("td");
+            information.textContent = city.info;
+
+            const imageCell = document.createElement("td");
+            const image = document.createElement("img");
+            image.src = city.image;
+            image.alt = city.name;
+            imageCell.appendChild(image);
+
+            row.appendChild(nameCell);
+            row.appendChild(information);
+            row.appendChild(imageCell);
+
+            tbody.appendChild(row);
+          });
+        })
+        .catch((error) => {
+          console.error("Error fetching data:", error);
+          const errorRow = document.createElement("tr");
+          const errorCell = document.createElement("td");
+          errorCell.setAttribute("colspan", "3");
+          errorCell.textContent =
+            "Failed to fetch city data. Please try again later.";
+          errorRow.appendChild(errorCell);
+          tbody.appendChild(errorRow);
+        });
+    </script>
+  </body>
+</html>
